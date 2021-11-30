@@ -1,5 +1,5 @@
-project(dij)
+project(dijkstra)
 
-add_executable(dij main.cpp)
+add_executable(dijkstra main.cpp)
 
 add_definitions(-Wall -g)
