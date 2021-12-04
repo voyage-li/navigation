@@ -2,17 +2,29 @@
 
 #include <bits/stdc++.h>
 
-class MGraph
+struct ArcNode
+{
+    int adjvex;
+    struct ArcNode *nextarc;
+};
+
+struct VNode
+{
+    int weight;
+    struct ArcNode *firstarc;
+};
+
+class AGraph
 {
 private:
-    int **data;
+    std::vector<VNode> data;
     std::unordered_map<int, int> map;
     int vexnum;
     int now_vex;
 
 public:
-    MGraph(int length);
-    ~MGraph();
+    AGraph(int length);
+    ~AGraph();
     bool input(int x, int y, int info);
     int get_arc(int x, int y);
     int get_vex();

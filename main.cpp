@@ -6,7 +6,7 @@ int main()
 {
     input for_input;
     std::string data_path = for_input.get_infile();
-    MGraph G(for_input.get_fre());
+    AGraph G(for_input.get_fre());
     std::ifstream infile(data_path.c_str(), std::ios::in | std::ios::binary);
     char c;
     int num1, num2, info;
@@ -22,6 +22,7 @@ int main()
         }
         auto line_stream = std::istringstream(line);
         line_stream >> num1 >> num2 >> info;
+        // std::cout << num1 << num2 << info << std::endl;
         G.input(num1, num2, info);
     }
     infile.close();
