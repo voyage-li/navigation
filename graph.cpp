@@ -1,41 +1,53 @@
 #include "graph.h"
 
-MGraph::MGraph(int length)
+AGraph::AGraph(int length)
 {
     now_vex = 0;
     vexnum = length;
-    data = new int *[length];
-    for (int i = 0; i < length; i++)
-        data[i] = new int[length];
-
-    for (int i = 0; i < length; i++)
-        for (int j = 0; j < length; j++)
-            data[i][j] = INT_MAX;
 };
 
-MGraph::~MGraph()
+AGraph::~AGraph()
 {
-    for (int i = 0; i < vexnum; i++)
-        delete[] data[i];
-    delete[] data;
 }
 
-int MGraph::get_vex()
+int AGraph::get_vex()
 {
     return vexnum;
 }
 
-bool MGraph::input(int x, int y, int info)
+bool AGraph::input(int x, int y, int info)
 {
+    std::cout << "\r\t\t\t\t\t\t\r" << x;
     if (map.find(x) == map.end())
+    {
         map[x] = now_vex++;
+        struct VNode *first_init = new VNode;
+        first_init->vex_data = x;
+        first_init->firstarc = nullptr;
+        data.push_back(first_init);
+    }
     if (map.find(y) == map.end())
+    {
         map[y] = now_vex++;
-    data[map[x]][map[y]] = info;
-    return true;
-}
+        struct VNode *first_init = new VNode;
+        first_init->vex_data = y;
+        first_init->firstarc = nullptr;
+        data.push_back(first_init);
+    }
+    struct ArcNode *p = new ArcNode;
+    p->nextarc = nullptr;
+    p->weight = info;
+    p->adjvex = map[y];
 
-int MGraph::get_arc(int x, int y)
-{
-    return data[map[x]][map[y]];
+    struct ArcNode *q = data[map[x]]->firstarc;
+    if (q == nullptr)
+    {
+        data[map[x]]->firstarc = p;
+        return true;
+    }
+    while (q->nextarc != nullptr)
+        q = q->nextarc;
+    q->nextarc = p;
+
+    return true;
 }

@@ -15,9 +15,11 @@ input::input()
     std::unordered_map<int, int> map;
     int num1, num2;
 
+    printf("\033[?25l");
     std::string line;
     while (getline(infile, line))
     {
+        std::cout << "\r\t\t\t\t\t\t\r" << line;
         auto linestream = std::istringstream(line);
         line += "\n";
         outfile.write((char *)line.c_str(), sizeof(char) * line.length());
@@ -33,7 +35,7 @@ input::input()
             fre++;
         }
     }
-
+    printf("\033[?25h");
     infile.close();
     outfile.close();
 }
