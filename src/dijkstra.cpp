@@ -1,4 +1,5 @@
 #include "dijkstra.h"
+#include "Heap.cpp" //模板不支持分离编译
 
 void dijkstra_pri(AGraph &G, int x, int y)
 {
@@ -9,7 +10,7 @@ void dijkstra_pri(AGraph &G, int x, int y)
     int pre[G.get_vex()];
     memset(pre, -1, sizeof(pre));
 
-    std::priority_queue<node> q;
+    Heap<struct node> q;
     dis[G.map[x]] = 0;
     q.push(node(G.map[x], dis[G.map[x]]));
 
@@ -42,10 +43,10 @@ void dijkstra_pri(AGraph &G, int x, int y)
     int road = G.map[y];
     while (road != -1)
     {
-        printf("\033[0;30;47m%d\033[0m", G.data[road]->vex_data);
+        printf("\033[0;30;47m%d\033[0m ", G.data[road]->vex_data);
         road = pre[road];
         if (road != -1)
-            std::cout << " <- ";
+            std::cout << "<- ";
         else
             printf("\n");
     }

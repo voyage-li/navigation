@@ -14,7 +14,7 @@ public:
     ~Heap();
     void swim(int k);
     void sink(int k);
-    void push_back(T e);
+    void push(T e);
     void pop();
     T top();
     bool empty();

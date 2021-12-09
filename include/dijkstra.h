@@ -7,6 +7,11 @@ struct node
 {
     int begin;
     int distance;
+    node()
+    {
+        begin = 0;
+        distance = 0;
+    };
     node(int a, int b)
     {
         begin = a;

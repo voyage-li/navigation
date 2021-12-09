@@ -11,14 +11,14 @@ void Heap<T>::swap(T &a, T &b)
 template <class T>
 Heap<T>::Heap()
 {
-    data.resize(1, 0);
+    T temp;
+    data.push_back(temp);
     length = 0;
 }
 
 template <class T>
 Heap<T>::~Heap()
 {
-    std::cout << "析构" << std::endl;
 }
 
 template <class T>
@@ -34,7 +34,7 @@ int Heap<T>::size()
 }
 
 template <class T>
-void Heap<T>::push_back(T e)
+void Heap<T>::push(T e)
 {
     data.push_back(e);
     length++;
