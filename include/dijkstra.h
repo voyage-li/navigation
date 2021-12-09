@@ -14,6 +14,10 @@ struct node
     };
     friend bool operator<(struct node n1, struct node n2)
     {
+        return n1.distance < n2.distance;
+    }
+    friend bool operator>(struct node n1, struct node n2)
+    {
         return n1.distance > n2.distance;
     }
 };
