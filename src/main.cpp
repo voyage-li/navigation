@@ -1,10 +1,28 @@
 #include "dijkstra.h"
-#include "graph.h"
 #include "input.h"
 
 int main()
 {
     system("clear");
+
+    Heap<int> test;
+    test.push_back(6);
+    test.push_back(5);
+    test.push_back(4);
+    test.push_back(3);
+    test.push_back(2);
+    test.push_back(1);
+    while (!test.empty())
+    {
+        std::cout << test.top() << std::endl;
+        test.pop();
+    }
+
+    getchar();
+    getchar();
+    getchar();
+    getchar();
+
     input for_input;
     std::string data_path = for_input.get_infile();
     AGraph G(for_input.get_fre());

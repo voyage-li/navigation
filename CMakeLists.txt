@@ -9,7 +9,7 @@ set(SOURCES
     src/dijkstra.cpp
     src/graph.cpp
     src/input.cpp
-    src/my_priority_que.cpp)
+    src/Heap.cpp)
 
 add_executable(navigation ${SOURCES})
 
@@ -17,6 +17,5 @@ add_definitions(-Wall -g)
 
 target_include_directories(navigation
 PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
+    ${CMAKE_CURRENT_SOURCE_DIR}/include)
 

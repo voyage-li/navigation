@@ -19,4 +19,5 @@ public:
     T top();
     bool empty();
     int size();
+    void swap(T &a, T &b);
 };

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "graph.h"
-#include "my_priority_que.h"
+#include "Heap.h"
 
 struct node
 {

@@ -1,15 +1,24 @@
-#include "my_priority_que.h"
+#include "Heap.h"
+
+template <class T>
+void Heap<T>::swap(T &a, T &b)
+{
+    T temp = a;
+    a = b;
+    b = temp;
+}
 
 template <class T>
 Heap<T>::Heap()
 {
-    data.push_back(NULL);
+    data.resize(1, 0);
     length = 0;
 }
 
 template <class T>
 Heap<T>::~Heap()
 {
+    std::cout << "析构" << std::endl;
 }
 
 template <class T>
@@ -29,16 +38,15 @@ void Heap<T>::push_back(T e)
 {
     data.push_back(e);
     length++;
-    sink(length);
+    swim(length);
 }
 
 template <class T>
 void Heap<T>::pop()
 {
-    int max = data[1];
-    swap(data[1], data[m_length--]);
+    swap(data[1], data[length--]);
     data.pop_back();
-    swim(1);
+    sink(1);
 }
 
 template <class T>
@@ -46,6 +54,7 @@ T Heap<T>::top()
 {
     if (!empty())
         return data[1];
+    return data[0];
 }
 
 template <class T>
@@ -68,7 +77,7 @@ void Heap<T>::sink(int k)
             j++;
         if (data[k] < data[j])
             break;
-        swap(data[k], data[i]);
+        swap(data[k], data[j]);
         k = j;
     }
 }
