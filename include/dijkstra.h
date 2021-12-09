@@ -1,6 +1,7 @@
 #pragma once
 
 #include "graph.h"
+#include "my_priority_que.h"
 
 struct node
 {
@@ -17,6 +18,6 @@ struct node
     }
 };
 
+int find_min(int dis[], int len, int vis[]);
+void dijkstra(AGraph &G, int x, int y);
 void dijkstra_pri(AGraph &G, int x, int y);
-
-void dijkstra_nlogn(AGraph &G, int x, int y);

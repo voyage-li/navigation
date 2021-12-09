@@ -13,6 +13,8 @@ set(SOURCES
 
 add_executable(navigation ${SOURCES})
 
+add_definitions(-Wall -g)
+
 target_include_directories(navigation
 PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include

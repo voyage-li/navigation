@@ -37,7 +37,19 @@ int main()
         std::cin >> road_begin >> road_to;
         if (road_begin == -1)
             break;
-        dijkstra_pri(G, road_begin, road_to);
+        std::cout << "请选择搜索方式：" << std::endl;
+        std::cout << "1. 朴素算法" << std::endl;
+        std::cout << "2. 堆优化" << std::endl;
+        int select;
+        std::cin >> select;
+        if (select == 2)
+            dijkstra_pri(G, road_begin, road_to);
+        else if (select == 1)
+            dijkstra(G, road_begin, road_to);
+        else
+        {
+            std::cout << "选择错误!" << std::endl;
+        }
     }
 
     infile.close();
