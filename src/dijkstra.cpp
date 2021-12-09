@@ -1,6 +1,6 @@
 #include "dijkstra.h"
 
-void dijkstra_n2(AGraph &G, int x, int y)
+void dijkstra_pri(AGraph &G, int x, int y)
 {
     int visited[G.get_vex()];
     memset(visited, 0, sizeof(visited));
@@ -42,7 +42,7 @@ void dijkstra_n2(AGraph &G, int x, int y)
     int road = G.map[y];
     while (road != -1)
     {
-        std::cout << G.data[road]->vex_data;
+        printf("\033[0;30;47m%d\033[0m", G.data[road]->vex_data);
         road = pre[road];
         if (road != -1)
             std::cout << " <- ";
@@ -51,6 +51,6 @@ void dijkstra_n2(AGraph &G, int x, int y)
     }
 }
 
-void dijkstra_nlogn(AGraph &G, int x, int y)
+void dijkstra_n2(AGraph &G, int x, int y)
 {
 }

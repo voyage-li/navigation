@@ -37,7 +37,7 @@ int main()
         std::cin >> road_begin >> road_to;
         if (road_begin == -1)
             break;
-        dijkstra_n2(G, road_begin, road_to);
+        dijkstra_pri(G, road_begin, road_to);
     }
 
     infile.close();

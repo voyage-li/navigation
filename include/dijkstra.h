@@ -17,6 +17,6 @@ struct node
     }
 };
 
-void dijkstra_n2(AGraph &G, int x, int y);
+void dijkstra_pri(AGraph &G, int x, int y);
 
 void dijkstra_nlogn(AGraph &G, int x, int y);
