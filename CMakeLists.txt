@@ -9,7 +9,8 @@ set(SOURCES
     src/dijkstra.cpp
     src/graph.cpp
     src/input.cpp
-    src/Heap.cpp)
+    src/Heap.cpp
+    src/huffman.cpp)
 
 add_executable(navigation ${SOURCES})
 
