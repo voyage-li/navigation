@@ -3,7 +3,7 @@
 input::input()
 {
     char_size = 0;
-    std::cout << "请输入数据文件路径:" << std::endl;
+    printf("\033[0;30;47m请输入数据文件路径:\033[0m\n");
     getline(std::cin, data_info);
     auto loc = data_info.find('.');
     out_info_0 = data_info.substr(0, loc) + "_.txt";
@@ -60,7 +60,6 @@ int input::get_fre()
 {
     return fre;
 }
-
 bool input::compress_input()
 {
     std::cout << "正在压缩..." << std::endl;
