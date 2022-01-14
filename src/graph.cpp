@@ -1,9 +1,9 @@
 #include "graph.h"
 
-AGraph::AGraph(int length)
+AGraph::AGraph()
 {
-    now_vex = 0;
-    vexnum = length;
+    vexnum = 0;
+    data.resize(100000000, nullptr);
 };
 
 AGraph::~AGraph()
@@ -17,37 +17,45 @@ int AGraph::get_vex()
 
 bool AGraph::input(int x, int y, int info)
 {
-    std::cout << "\r\t\t\t\t\t\t\r" << x;
-    if (map.find(x) == map.end())
+    std::cout << "\r" << x << " " << y << " " << info;
+    if (data[x] == nullptr)
     {
-        map[x] = now_vex++;
+        vexnum++;
         struct VNode *first_init = new VNode;
         first_init->vex_data = x;
         first_init->firstarc = nullptr;
-        data.push_back(first_init);
-    }
-    if (map.find(y) == map.end())
-    {
-        map[y] = now_vex++;
-        struct VNode *first_init = new VNode;
-        first_init->vex_data = y;
-        first_init->firstarc = nullptr;
-        data.push_back(first_init);
+        data[x] = first_init;
     }
     struct ArcNode *p = new ArcNode;
     p->nextarc = nullptr;
     p->weight = info;
-    p->adjvex = map[y];
+    p->adjvex = y;
 
-    struct ArcNode *q = data[map[x]]->firstarc;
+    struct ArcNode *q = data[x]->firstarc;
     if (q == nullptr)
     {
-        data[map[x]]->firstarc = p;
+        data[x]->firstarc = p;
+        last_ptr = p;
         return true;
     }
     while (q->nextarc != nullptr)
         q = q->nextarc;
     q->nextarc = p;
+
+    last_ptr = p;
+    return true;
+}
+
+bool AGraph::input_(int x, int y, int info)
+{
+    std::cout << "\r" << x << " " << y << " " << info;
+
+    struct ArcNode *p = new ArcNode;
+    p->nextarc = nullptr;
+    p->weight = info;
+    p->adjvex = y;
+    last_ptr->nextarc = p;
+    last_ptr = p;
 
     return true;
 }

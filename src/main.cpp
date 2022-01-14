@@ -1,211 +1,151 @@
 #include "dijkstra.h"
-#include "input.h"
 
 int main()
 {
-    system("clear");
-    input for_input;
-    std::string data_path = for_input.get_infile();
-    AGraph G(for_input.get_fre());
+    int for_system;
+    for_system = system("clear");
+    printf("\033[0;30;47m请输入文件路径\033[0m\n");
+    std::string data_path;
+    getline(std::cin, data_path);
+
+    printf("\033[0;30;47m选择文件预处理的方式\033[0m\n");
+    std::cout << "\e[1m1.\e[0m 二进制" << std::endl;
+    std::cout << "\e[1m2.\e[0m 压缩" << std::endl;
+    char for_input_select;
+    std::cin >> for_input_select;
+
+    AGraph G;
     std::ifstream infile(data_path.c_str(), std::ios::in | std::ios::binary);
 
-    char c;
-    int num1, num2, info;
-    printf("\033[0;30;47m读取处理后文件...\033[0m\n");
-    int select_insert;
-    std::cout << "请选择使用文件:" << std::endl;
-    std::cout << "1. 普通二进制" << std::endl;
-    std::cout << "2. huffman压缩后" << std::endl;
-    std::cin >> select_insert;
+    clock_t begin, end;
+    begin = clock();
 
-    printf("\033[?25l");
-    if (select_insert == 1)
+    if (for_input_select == '1')
     {
-        while (infile.read((char *)&c, sizeof(char)))
+        int num1, num2, info;
+        printf("\033[?25l");
+        while (!infile.eof())
         {
-            std::string line;
-            line.push_back(c);
-            while (infile.read((char *)&c, sizeof(char)))
-            {
-                if (c == '\n')
-                    break;
-                line.push_back(c);
-            }
-            auto line_stream = std::istringstream(line);
-            line_stream >> num1 >> num2 >> info;
+            infile.read((char *)&num1, sizeof(int));
+            infile.read((char *)&num2, sizeof(int));
+            infile.read((char *)&info, sizeof(int));
+
             G.input(num1, num2, info);
-            G.input(num2, num1, info);
         }
+        printf("\033[?25h");
     }
-    else
+    else if (for_input_select == '2')
     {
-        std::string out_info = for_input.get_infile_con();
-        std::ifstream infile(out_info.c_str(), std::ios::in | std::ios::binary);
-
-        std::map<long long int, int> map; //需要压缩的文件中不同字符的数量
-        HuffmanTree HT;                   // huffman树
-
-        if (!infile)
+        int tag;
+        int num1, num2, info;
+        printf("\033[?25l");
+        while (!infile.eof())
         {
-            std::cout << "文件打开错误!" << std::endl;
-            getchar();
-            return false;
-        }
-
-        std::cout << "正在读入图的相关数据..." << std::endl;
-
-        char tmp;
-        int num;
-        long long int fff;
-        int char_size;
-
-        std::string type;
-        int tree_n;
-        int select;
-        infile >> type;             //获取解压文件格式
-        infile >> tree_n >> tmp;    //获取 Huffman树元数
-        infile >> char_size >> tmp; //获取压缩基本符号单元
-        infile >> select >> tmp;    //获取压缩基本符号单元
-        int every = select * 4;
-
-        while (1)
-        {
-            fff = 0;
-            char c;
-            int now_get_bit = 0;
-            for (int i = 0; i < (select + 1) / 2; i++)
+            tag = 0;
+            infile.read((char *)&num1, sizeof(int));
+            infile.read((char *)&num2, sizeof(int));
+            while (num2 != -1)
             {
-                infile.get(c);
-                for (int j = 0; j < 8; j++)
+                infile.read((char *)&info, sizeof(int));
+                if (tag == 0)
                 {
-                    fff += (long long int)(((int)c >> (7 - j)) & 1) << (every - 1 - now_get_bit);
-                    now_get_bit++;
+                    G.input(num1, num2, info);
+                    tag = 1;
                 }
+                else
+                    G.input_(num1, num2, info);
+                infile.read((char *)&num2, sizeof(int));
             }
-            infile >> tmp >> num;
-            map[fff] = num;
-            infile.get(tmp);
-
-            if (tmp != '|')
-                break;
         }
-
-        init_for_de(HT, map, tree_n);
-
-        char ans[8];
-        char c;
-        int index = 0;
-        int fre = map.size();
-        int root_loc;
-        int now;
-        int now_bit = 0; //记录当前输出字符到的bit
-        int out_tmp = 0; //用来记录输出的字符
-        int wei = judge(tree_n);
-        int wei_now = 0;
-        int switch_child = 0;
-
-        for (root_loc = 1; root_loc < 2 * fre; root_loc++)
-        {
-            if (HT[root_loc].parent == 0)
-                break;
-        }
-
-        now = root_loc;
-        std::string line;
-        while (1)
-        {
-            infile.get(c);
-            int tt = c;
-            index = 0;
-            for (int i = 7; i >= 0; i--)
-                ans[index++] = ((tt >> i) & 1) + '0';
-            index = 0;
-            while (1)
-            {
-                switch_child += (ans[index] - '0') << (wei - 1 - wei_now);
-                wei_now++;
-                if (wei == wei_now)
-                {
-                    wei_now = 0;
-                    now = HT[now].child[switch_child];
-                    switch_child = 0;
-                }
-                index++;
-
-                if (HT[now].child[0] == 0)
-                {
-                    //获取对应权值对应的 bit位
-                    int int_to_char = HT[now].key;
-                    char ans_[every + 1];
-                    ans_[every] = '\0';
-                    for (int j = 0; j < every; j++)
-                        ans_[j] = ((int_to_char >> (every - 1 - j)) & 1) + '0';
-
-                    int j = 0;
-                    while (ans_[j] != '\0')
-                    {
-                        now_bit++;
-                        out_tmp += (ans_[j] - '0') << (8 - now_bit);
-                        if (now_bit == 8)
-                        {
-                            char_size--;
-                            if (out_tmp != '\n')
-                                line.push_back(out_tmp);
-                            else
-                            {
-                                auto line_stream = std::istringstream(line);
-                                line_stream >> num1 >> num2 >> info;
-                                G.input(num1, num2, info);
-                                G.input(num2, num1, info);
-                                line.clear();
-                            }
-                            out_tmp = 0;
-                            now_bit = 0;
-                        }
-                        j++;
-                        if (char_size == 0)
-                            break;
-                    }
-                    now = root_loc;
-                }
-                if (index == 8 || char_size == 0)
-                    break;
-            }
-            if (char_size == 0)
-                break;
-        }
-
-        infile.close();
+        printf("\033[?25h");
     }
-    printf("\033[?25h");
+
+    end = clock();
+
+    std::cout << "\n\033[0;30;47m输入用时:\033[0m" << std::endl;
+    std::cout << double(end - begin) / CLOCKS_PER_SEC << "s" << std::endl;
+
+    getchar();
+    getchar();
+
+    infile.close();
 
     while (1)
     {
-        system("clear");
-        system("clear");
+        for_system = system("clear");
+        printf("\r                                                                    ");
         printf("\r\033[0;30;47m请输入起点终点:\033[0m\n");
         int road_begin, road_to;
         std::cin >> road_begin >> road_to;
         if (road_begin == -1)
             break;
-        std::cout << "请选择搜索方式:" << std::endl;
-        std::cout << "1. 朴素算法" << std::endl;
-        std::cout << "2. 堆优化" << std::endl;
-        int select;
-        std::cin >> select;
-        if (select == 2)
-            dijkstra_pri(G, road_begin, road_to);
-        else if (select == 1)
-            dijkstra(G, road_begin, road_to);
-        else
+        double time_record[8];
+        memset(time_record, 0, sizeof(time_record));
+        for_system = system("clear");
+        while (1)
         {
-            std::cout << "选择错误! 默认使用堆优化" << std::endl;
-            dijkstra_pri(G, road_begin, road_to);
+            for_system = system("clear");
+            printf("\033[0;30;47m搜索路径:\033[0m\n");
+            std::cout << road_begin << " -> " << road_to << std::endl;
+
+            if (road_begin < 0 || road_to < 0 || !G.data[road_begin] || !G.data[road_to])
+            {
+                std::cout << "没有数据" << std::endl;
+                getchar();
+                getchar();
+                break;
+            }
+
+            printf("\033[0;30;47m请选择搜索方式:\033[0m\n");
+            std::cout << "\e[1m0.\e[0m 朴素法(n^2)                " << time_record[0] << "s" << std::endl;
+            std::cout << "\e[1m1.\e[0m 堆优化(Heap)               " << time_record[1] << "s" << std::endl;
+            std::cout << "\e[1m2.\e[0m 堆优化(pair_heap,递归)     " << time_record[2] << "s" << std::endl;
+            std::cout << "\e[1m3.\e[0m 堆优化(pair_heap,队列)     " << time_record[3] << "s" << std::endl;
+            std::cout << "\e[1m4.\e[0m 堆优化(Fibonacii)          " << time_record[4] << "s" << std::endl;
+            std::cout << "\e[1m5.\e[0m 堆优化(priority_que)       " << time_record[5] << "s" << std::endl;
+            std::cout << "\e[1m6.\e[0m 堆优化(pairing_heap_tag)   " << time_record[6] << "s" << std::endl;
+            std::cout << "\e[1m7.\e[0m 堆优化(thin_heap_tag)      " << time_record[7] << "s" << std::endl;
+            std::cout << "\e[1m8.\e[0m 下一组数据" << std::endl;
+            std::cout << "\e[1m9.\e[0m 退出程序" << std::endl;
+            int select;
+            std::cin >> select;
+            clock_t startTime, endTime;
+            startTime = clock();
+            if (select == 1)
+                endTime = dijkstra_heap(G, road_begin, road_to);
+            else if (select == 0)
+                endTime = dijkstra(G, road_begin, road_to);
+            else if (select == 2)
+                endTime = dijkstra_pair_heap(G, road_begin, road_to);
+            else if (select == 3)
+                endTime = dijkstra_pair_heap_0(G, road_begin, road_to);
+            else if (select == 4)
+                endTime = dijkstra_fibheap(G, road_begin, road_to);
+            else if (select == 5)
+                endTime = dijkstra_heap_gnu(G, road_begin, road_to);
+            else if (select == 6)
+                endTime = dijkstra_pair_heap_gnu(G, road_begin, road_to);
+            else if (select == 7)
+                endTime = dijkstra_thin_heap_gnu(G, road_begin, road_to);
+            else if (select == 8)
+                break;
+            else if (select == 9)
+            {
+                return 0;
+            }
+            else
+            {
+                std::cout << "选择错误! 使用Heap" << std::endl;
+                endTime = dijkstra_heap(G, road_begin, road_to);
+                select = 1;
+            }
+
+            time_record[select] = double(endTime - startTime) / CLOCKS_PER_SEC;
+            std::cout << "\nrun time: " << time_record[select] << "s" << std::endl;
+            getchar();
+            getchar();
         }
-        getchar();
-        getchar();
     }
 
-    infile.close();
     return 0;
 }

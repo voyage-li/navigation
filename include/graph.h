@@ -19,14 +19,13 @@ class AGraph
 {
 private:
     int vexnum;
-    int now_vex;
+    struct ArcNode *last_ptr;
 
 public:
     std::vector<VNode *> data;
-    std::unordered_map<int, int> map;
-    AGraph(int length);
+    AGraph();
     ~AGraph();
-    bool input(int x, int y, int info); //输入数据
-    int get_vex();                      //返回点数
-    // int operator[](int x);
+    bool input(int x, int y, int info);  //输入数据
+    bool input_(int x, int y, int info); //输入数据
+    int get_vex();                       //返回点数
 };

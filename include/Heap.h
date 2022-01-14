@@ -12,12 +12,12 @@ private:
 public:
     Heap();
     ~Heap();
-    void swim(int k);
-    void sink(int k);
-    void push(T e);
-    void pop();
-    T top();
-    bool empty();
-    int size();
-    void swap(T &a, T &b);
+    inline void swim(int k);      //上浮
+    inline void sink(int k);      //下沉
+    inline void push(T e);        //入堆
+    inline void pop();            //出堆
+    inline T top();               //返回堆顶元素
+    inline bool empty();          //判断是否为空
+    inline int size();            //返回大小
+    inline void swap(T &a, T &b); //交换元素
 };
